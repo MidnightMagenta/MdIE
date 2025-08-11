@@ -20,12 +20,23 @@ find_package(OpenGL REQUIRED)
 add_library("${ProjectName}-lib" STATIC
     #src files
     src/image.cpp
+    src/error.cpp
+    src/gl_program.cpp
     #header files
     include/image.hpp
     include/align.hpp
+    include/singleton.hpp
+    include/error.hpp
+    include/gl_program.hpp
 )
 
 add_executable("${ProjectName}-img_test"
+    #src files
+    src/main_img_test.cpp
+    #header files
+)
+
+add_executable("${ProjectName}"
     #src files
     src/main.cpp
     #header files
@@ -55,4 +66,14 @@ target_include_directories("${ProjectName}-img_test" PUBLIC
 
 set_target_properties("${ProjectName}-img_test" PROPERTIES 
     FOLDER "mdie_tests"
+)
+
+target_link_libraries("${ProjectName}" PUBLIC 
+    "${ProjectName}-lib"
+)
+
+target_include_directories("${ProjectName}" PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/dependencies"
+    "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/submodules"
 )
