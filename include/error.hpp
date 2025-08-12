@@ -17,7 +17,7 @@
 #endif						// _DEBUG
 
 namespace mdie {
-enum Result { SUCCESS, TEST_ERROR, GL_ERROR };
+enum Result { SUCCESS, TEST_ERROR, GL_ERROR, COULD_NOT_OPEN_FILE };
 
 class ErrorHandler : public Singleton<ErrorHandler> {
 public:

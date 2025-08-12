@@ -16,18 +16,25 @@ add_subdirectory(dependencies)
 
 find_package(OpenGL REQUIRED)
 
+add_custom_target(copy_resources ALL
+    COMMENT "Copying resources"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources
+)
+
 #app executable
 add_library("${ProjectName}-lib" STATIC
     #src files
     src/image.cpp
     src/error.cpp
     src/gl_program.cpp
+    src/file.cpp
     #header files
     include/image.hpp
     include/align.hpp
     include/singleton.hpp
     include/error.hpp
     include/gl_program.hpp
+    include/file.hpp
 )
 
 add_executable("${ProjectName}-img_test"
@@ -45,6 +52,7 @@ add_executable("${ProjectName}"
 target_link_libraries("${ProjectName}-lib" PUBLIC
 	glfw
     glad
+    stb
     OpenGL::GL
 )
 
@@ -53,6 +61,8 @@ target_include_directories("${ProjectName}-lib" PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/dependencies"
     "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/submodules"
 )
+
+add_dependencies("${ProjectName}-lib" copy_resources)
 
 target_link_libraries("${ProjectName}-img_test" PUBLIC 
     "${ProjectName}-lib"

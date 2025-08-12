@@ -13,7 +13,9 @@ mdie::Result create_program(GLuint *program, const std::vector<std::pair<const c
 class GLprogram {
 public:
 	GLprogram() {}
-	GLprogram(const std::vector<std::pair<const char *, GLenum>> &shaders) { create(shaders); }
+	GLprogram(const std::vector<std::pair<const char *, GLenum>> &shaders) {
+		if (create(shaders) != mdie::Result::SUCCESS) { throw std::runtime_error("Failed to create program"); }
+	}
 	~GLprogram() { destroy(); }
 
 	mdie::Result create(const std::vector<std::pair<const char *, GLenum>> &shaders);

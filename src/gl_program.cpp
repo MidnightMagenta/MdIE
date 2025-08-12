@@ -1,4 +1,5 @@
 #include "gl_program.hpp"
+#include <fstream>
 
 mdie::Result mdie::compile_shader(GLuint *shader, GLenum type, const char *src) {
 	*shader = glCreateShader(type);
@@ -24,7 +25,7 @@ mdie::Result mdie::create_program(GLuint *program, const std::vector<std::pair<c
 	std::vector<GLuint> shaderIDs(shaders.size());
 	for (size_t i = 0; i < shaders.size(); i++) {
 		if (compile_shader(&shaderIDs[i], shaders[i].second, shaders[i].first) != mdie::Result::SUCCESS) {
-			MDIE_LOG_ERROR("Failed to compile error", mdie::Result::GL_ERROR);
+			MDIE_LOG_ERROR("Failed to compile shader", mdie::Result::GL_ERROR);
 			return mdie::Result::GL_ERROR;
 		}
 		glAttachShader(*program, shaderIDs[i]);
@@ -58,6 +59,8 @@ mdie::Result mdie::GLprogram::create(const std::vector<std::pair<const char *, G
 	param = 0;
 	glGetProgramiv(m_handle, GL_ACTIVE_UNIFORM_BLOCKS, &param);
 	m_uniformBlocks.reserve(param);
+
+	return res;
 }
 
 void mdie::GLprogram::prepopulate_cache() {

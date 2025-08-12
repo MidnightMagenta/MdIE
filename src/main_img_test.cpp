@@ -5,6 +5,7 @@
 #include <gl_program.hpp>
 #include <glad/glad.h>
 #include <image.hpp>
+#include <file.hpp>
 
 static void glfw_err_cb(int code, const char *desc) { std::printf("GLFW error %d: %s\n", code, desc); }
 
@@ -74,28 +75,8 @@ int main() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) (2 * sizeof(float)));
 
-	const char *vsSrc = R"GLSL(
-						#version 460 core
-						layout(location=0) in vec2 inPos;
-						layout(location=1) in vec2 inUV;
-						out vec2 vUV;
-						void main(){
-							vUV = inUV;
-							gl_Position = vec4(inPos, 0.0, 1.0);
-						}
-						)GLSL";
-
-	const char *fsSrc = R"GLSL(
-						#version 460 core
-						in vec2 vUV;
-						out vec4 fragColor;
-						uniform sampler2D uTex;
-						void main(){
-							fragColor = texture(uTex, vUV);
-						}
-						)GLSL";
-
-	mdie::GLprogram prog({{vsSrc, GL_VERTEX_SHADER}, {fsSrc, GL_FRAGMENT_SHADER}});
+	mdie::GLprogram prog({{mdie::read_plaintext("resources/shaders/vs.vert").c_str(), GL_VERTEX_SHADER},
+						  {mdie::read_plaintext("resources/shaders/fs.frag").c_str(), GL_FRAGMENT_SHADER}});
 
 	while (!glfwWindowShouldClose(win)) {
 		glfwPollEvents();
